@@ -1,4 +1,7 @@
-from flask import Flask
+from typing import Any
+from http import HTTPStatus
+
+from flask import Flask, make_response, request, Response
 
 
 class FlaskExercise:
@@ -28,4 +31,44 @@ class FlaskExercise:
 
     @staticmethod
     def configure_routes(app: Flask) -> None:
-        pass
+        users: dict = {}
+
+        @app.route("/user", methods=["POST"])
+        def create_user() -> Response:
+            data: dict[str, Any] = request.get_json()
+            name: str = data.get("name")
+            if name:
+                users[name] = data.get("age")
+                return make_response(
+                    {"data": f"User {name} is created!"},
+                    HTTPStatus.CREATED,
+                )
+            else:
+                return make_response(
+                    {"errors": {"name": "This field is required"}},
+                    HTTPStatus.UNPROCESSABLE_ENTITY,
+                )
+
+        @app.route("/user/<username>", methods=["GET"])
+        def get_user(username: str) -> Response:
+            if username not in users.keys():
+                return make_response("", HTTPStatus.NOT_FOUND)
+            return make_response({"data": f"My name is {username}"})
+
+        @app.route("/user/<username>", methods=["PATCH"])
+        def update_user(username: str) -> Response:
+            data: dict[str, Any] = request.get_json()
+            name: str = data.get("name")
+            if not name or not username:
+                return make_response("", HTTPStatus.UNPROCESSABLE_ENTITY)
+
+            users[name] = data.get("age")
+            del users[username]
+            return make_response({"data": f"My name is {name}"})
+
+        @app.route("/user/<username>", methods=["DELETE"])
+        def delete_user(username: str) -> Response:
+            if not username:
+                return make_response("", HTTPStatus.UNPROCESSABLE_ENTITY)
+            del users[username]
+            return make_response("", HTTPStatus.NO_CONTENT)
