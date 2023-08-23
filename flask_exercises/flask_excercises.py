@@ -60,7 +60,7 @@ class FlaskExercise:
             data: dict[str, Any] = request.get_json()
             name: str = data.get("name")
             if not name or not username:
-                return make_response("", HTTPStatus.UNPROCESSABLE_ENTITY)
+                return make_response("", HTTPStatus.NOT_FOUND)
 
             users[name] = data.get("age")
             del users[username]
