@@ -15,10 +15,12 @@ class MapExercise:
         """
 
         def check_country_and_rating(movie: dict[str, Any]) -> Optional[float]:
-            countries: list[str] = movie["country"].split(",")
+            separator_count: int = movie["country"].count(",")
+            country_count: int = separator_count + 1
+
             rating: float = float(movie["rating_kinopoisk"]) if movie["rating_kinopoisk"] else 0
 
-            if len(countries) >= 2 and rating > 0:
+            if country_count >= 2 and rating > 0:
                 return rating
             return None
 
