@@ -17,8 +17,7 @@ class FilterMapExercise:
         """
         filtered_array: list[Any] = []
         for item in input_array:
-            result, value = func(item)
-            if not result:
-                continue
-            filtered_array.append(value)
+            flag, result = func(item)
+            if flag:
+                filtered_array.append(result)
         return filtered_array
