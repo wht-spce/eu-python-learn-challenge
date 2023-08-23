@@ -9,10 +9,17 @@ class ListExercise:
         :return: Список с замененными элементами
         """
 
+        def get_max_value() -> int:
+            max_: int = input_list[0]
+            for i in input_list:
+                if i > max_:
+                    max_ = i
+            return max_
+
         result: list[int] = []
 
         if input_list:
-            max_value: int = max(input_list)
+            max_value = get_max_value()
             for item in input_list:
                 if item > 0:
                     result.append(max_value)
@@ -31,15 +38,21 @@ class ListExercise:
         :return: Номер элемента
         """
 
+        def binary_search_recursive(input_list: list[int], query: int, low: int, high: int) -> int:
+            if low > high:
+                return -1
+
+            avg: int = (low + high) // 2
+            avg_element: int = input_list[avg]
+
+            if avg_element == query:
+                return avg
+            elif avg_element < query:
+                return binary_search_recursive(input_list, query, avg + 1, high)
+            else:
+                return binary_search_recursive(input_list, query, low, avg - 1)
+
         low: int = 0
         high: int = len(input_list) - 1
 
-        while low <= high:
-            avg: int = (low + high) // 2
-            if input_list[avg] == query:
-                return avg
-            elif input_list[avg] < query:
-                low = avg + 1
-            else:
-                high = avg - 1
-        return -1
+        return binary_search_recursive(input_list, query, low, high)
